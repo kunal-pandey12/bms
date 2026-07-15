@@ -17,4 +17,5 @@ public class PaymentDto {
     private LocalDateTime paymentTime;
     private String paymentMethod;
     private String status;
+    private Long bookingId;
 }
