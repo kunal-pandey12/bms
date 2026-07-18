@@ -5,6 +5,7 @@ import com.csf.bms.Model.User;
 import com.csf.bms.Repo.UserRepo;
 import com.csf.bms.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,9 +16,13 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Naya user register karo
     public UserDto registerUser(UserDto userDto) {
         User user = maptoEntity(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User savedUser = userRepo.save(user);
         return mapToDto(savedUser);
     }
