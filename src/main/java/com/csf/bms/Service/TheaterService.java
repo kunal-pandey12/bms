@@ -4,6 +4,7 @@ import com.csf.bms.Dto.TheaterDto;
 import com.csf.bms.Model.Theater;
 import com.csf.bms.Repo.TheaterRepo;
 import com.csf.bms.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +14,18 @@ import java.util.stream.Collectors;
 public class TheaterService {
 
 
+    @Autowired
     private TheaterRepo theaterRepo;
 
-    public TheaterDto createTheater(TheaterDto theaterDto){
-        Theater theater=maptoEntity(theaterDto);
-        Theater savedTheater = theaterRepo.save(theater);
-        return maptoDto(savedTheater);
+
+    public List<TheaterDto> createTheaters(List<TheaterDto> theaterDtos) {
+        return theaterDtos.stream()
+                .map(dto -> {
+                    Theater theater = maptoEntity(dto);
+                    Theater saved = theaterRepo.save(theater);
+                    return maptoDto(saved);
+                })
+                .collect(Collectors.toList());
     }
 
 
@@ -29,7 +36,7 @@ public class TheaterService {
         return maptoDto(theater);
     }
 
-    private List<TheaterDto> getAllTheater(){
+    public List<TheaterDto> getAllTheater(){
 
         List<Theater>theaters=theaterRepo.findAll();
         return theaters.stream()
@@ -37,7 +44,7 @@ public class TheaterService {
                 .collect(Collectors.toList());
     }
 
-    private List<TheaterDto> getAllTheaterByCity(String city){
+    public List<TheaterDto> getAllTheaterByCity(String city){
 
         List<Theater>theaters=theaterRepo.findByCity(city);
         return theaters.stream()

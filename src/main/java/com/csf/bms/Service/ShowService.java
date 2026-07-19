@@ -35,7 +35,6 @@ public class ShowService {
 
 
     public ShowDto createShow(ShowDto showDto) {
-
         Show show = new Show();
 
         Movie movie = movieRepo.findById(showDto.getMovie().getId())

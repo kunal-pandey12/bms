@@ -16,14 +16,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Naya user register karo
+/*    // Naya user register karo not use this after jwt security because authcontroller me hai
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(
             @RequestBody UserDto userDto) {
         return new ResponseEntity<>(
                 userService.registerUser(userDto),
                 HttpStatus.CREATED);
-    }
+    }*/
 
     // Sab users dekho
     @GetMapping("/all")
