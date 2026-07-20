@@ -1,6 +1,5 @@
 package com.csf.bms.Model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +47,10 @@ public class User implements UserDetails {
     // Role abhi simple rakhe hai — baad mein add kar sakte hain
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(role));
     }
+    @Column(nullable = false)
+    private String role; // "ROLE_ADMIN" ya "ROLE_USER"
 }
+
 

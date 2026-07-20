@@ -23,6 +23,7 @@ public class UserService {
     public UserDto registerUser(UserDto userDto) {
         User user = maptoEntity(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRole(userDto.getRole() != null ? userDto.getRole() : "ROLE_USER");
         User savedUser = userRepo.save(user);
         return mapToDto(savedUser);
     }

@@ -5,6 +5,7 @@ import com.csf.bms.Service.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,11 +35,43 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        // Register aur Login ke liye token nahi chahiye
-                        .requestMatchers("/api/users/register",
+                        // Public — token nahi chahiye
+                        .requestMatchers(
+                                "/api/users/register",
                                 "/api/auth/login",
-                        "/api/auth/register").permitAll()
-                        // Baaki sab ke liye token mandatory
+                                "/api/auth/register"
+                        ).permitAll()
+
+                        // ADMIN only — create/update/delete
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/theaters/**",
+                                "/api/screens/**",
+                                "/api/movies/**",
+                                "/api/shows/**",
+                                "/api/seats/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/theaters/**",
+                                "/api/screens/**",
+                                "/api/movies/**",
+                                "/api/shows/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/theaters/**",
+                                "/api/screens/**",
+                                "/api/movies/**",
+                                "/api/shows/**"
+                        ).hasRole("ADMIN")
+
+                        // USER — booking aur payment
+                        .requestMatchers(
+                                "/api/bookings/**",
+                                "/api/payments/**"
+                        ).hasAnyRole("USER", "ADMIN")
+
+                        // Baaki sab authenticated
                         .anyRequest().authenticated())
 
                 // Har request mein pehle JWT check hoga
